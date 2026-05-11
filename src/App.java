@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -7,19 +8,21 @@ import org.miguel.poo.abstraccion.forms.InputForm;
 import org.miguel.poo.abstraccion.forms.SelectForm;
 import org.miguel.poo.abstraccion.forms.TextareaForm;
 import org.miguel.poo.abstraccion.forms.select.Opcion;
-import org.miguel.poo.abstraccion.forms.validador.EmailValidador;
-import org.miguel.poo.abstraccion.forms.validador.LargoValidador;
-import org.miguel.poo.abstraccion.forms.validador.NoNuloValidador;
-import org.miguel.poo.abstraccion.forms.validador.NumeroValidador;
-import org.miguel.poo.abstraccion.forms.validador.RequeridoValidador;
+import org.miguel.poo.abstraccion.forms.validador.*;
 import org.miguel.poo.appfacturas.modelo.*;
+import org.miguel.poo.interfacees.modelos.ClientePremium;
 import org.miguel.poo.interfacees.repositorios.*;
+import org.miguel.poo.sobrecarga.Calculadora;
 
 public class App {
   public static void main(String[] args) throws Exception {
     // factura();
     // interfaces();
-    abstraccion();
+    // abstraccion();
+    // sobrecarga();
+    // interfaces2();
+    genericos();
+
   }
 
   public static void factura() {
@@ -90,6 +93,41 @@ public class App {
 
   }
 
+  public static void interfaces2() {
+    OrdenablePaginableCrudRepositorio repo = new ClienteListRepositorio();
+    repo.crear(new org.miguel.poo.interfacees.modelos.Cliente("Jano", "Pérez"));
+    repo.crear(new org.miguel.poo.interfacees.modelos.Cliente("Bea", "González"));
+    repo.crear(new org.miguel.poo.interfacees.modelos.Cliente("Luci", "Martínez"));
+    repo.crear(new org.miguel.poo.interfacees.modelos.Cliente("Andrés", "Guzmán"));
+
+    List<org.miguel.poo.interfacees.modelos.Cliente> clientes = repo.listar();
+    clientes.forEach(System.out::println);
+    System.out.println("===== paginable =====");
+    List<org.miguel.poo.interfacees.modelos.Cliente> paginable = repo.listar(1, 4);
+    paginable.forEach(System.out::println);
+
+    System.out.println("===== ordenar =====");
+    List<org.miguel.poo.interfacees.modelos.Cliente> clientesOrdenAsc = repo.listar("apellido", Direccion.ASC);
+    for (org.miguel.poo.interfacees.modelos.Cliente c : clientesOrdenAsc) {
+      System.out.println(c);
+    }
+
+    System.out.println("===== editar =====");
+    org.miguel.poo.interfacees.modelos.Cliente beaActualizar = new org.miguel.poo.interfacees.modelos.Cliente("Bea",
+        "Mena");
+    beaActualizar.setId(2);
+    repo.editar(beaActualizar);
+    org.miguel.poo.interfacees.modelos.Cliente bea = repo.porId(2);
+    System.out.println(bea);
+    System.out.println(" ============= ");
+    repo.listar("nombre", Direccion.ASC).forEach(System.out::println);
+    System.out.println("===== eliminar ======");
+    repo.eliminar(2);
+    repo.listar().forEach(System.out::println);
+    System.out.println("===== total ===== ");
+    System.out.println("Total registros: " + repo.total());
+  }
+
   public static void abstraccion() {
     InputForm username = new InputForm("username");
     username.addValidador(new RequeridoValidador());
@@ -148,5 +186,92 @@ public class App {
         e.getErrores().forEach(System.out::println);
       }
     });
+  }
+
+  public static void sobrecarga() {
+    System.out.println("sumar int : " + Calculadora.sumar(10, 5));
+    System.out.println("sumar float: " + Calculadora.sumar(10.0F, 5F));
+    System.out.println("sumar float-int: " + Calculadora.sumar(10f, 5));
+    System.out.println("sumar int-float: " + Calculadora.sumar(10, 5.0F));
+    System.out.println("sumar double: " + Calculadora.sumar(10.0, 5.0));
+    System.out.println("sumar string: " + Calculadora.sumar("10", "5"));
+    System.out.println("sumar tres int: " + Calculadora.sumar(10, 5, 3));
+    System.out.println("sumar 4 int: " + Calculadora.sumar(10, 5, 3, 4));
+    System.out.println("sumar 6 int: " + Calculadora.sumar(10, 5, 3, 4, 6, 7));
+    System.out.println("sumar float + n int: " + Calculadora.sumar(10.5F, 5, 9, 15));
+    System.out.println("sumar 4 double: " + Calculadora.sumar(10.0, 5.0, 3.5, 4.5));
+
+    System.out.println("sumar long: " + Calculadora.sumar(10L, 5L));
+    System.out.println("sumar int: " + Calculadora.sumar(10, '@'));
+    System.out.println("sumar float-int: " + Calculadora.sumar(10F, '@'));
+  }
+
+  public static void genericos() {
+    List<org.miguel.poo.interfacees.modelos.Cliente> clientes = new ArrayList<>();
+    clientes.add(new org.miguel.poo.interfacees.modelos.Cliente("Andres", "Guzmán"));
+
+    org.miguel.poo.interfacees.modelos.Cliente andres = clientes.iterator().next();
+
+    org.miguel.poo.interfacees.modelos.Cliente[] clientesArreglo = {
+        new org.miguel.poo.interfacees.modelos.Cliente("Luci", "Martínez"),
+        new org.miguel.poo.interfacees.modelos.Cliente("Andres", "Guzmán") };
+    Integer[] enterosArreglo = { 1, 2, 3 };
+
+    List<org.miguel.poo.interfacees.modelos.Cliente> clientesLista = fromArrayToList(clientesArreglo);
+    List<Integer> enterosLista = fromArrayToList(enterosArreglo);
+
+    clientesLista.forEach(System.out::println);
+    enterosLista.forEach(System.out::println);
+
+    List<String> nombres = fromArrayToList(new String[] { "Andrés", "Pepe",
+        "Luci", "Bea", "John" }, enterosArreglo);
+    nombres.forEach(System.out::println);
+
+    List<ClientePremium> clientesPremiumList = fromArrayToList(
+        new ClientePremium[] { new ClientePremium("Paco", "Fernández") });
+
+    imprimirClientes(clientes);
+    imprimirClientes(clientesLista);
+    imprimirClientes(clientesPremiumList);
+
+    System.out.println("Máximo de 1, 9 y 4 es: " + maximo(1, 9, 4));
+    System.out.println("Máximo de 3.9, 11.6, 7.78 es: " + maximo(3.9, 11.6, 7.78));
+    System.out.println("Máximo de zanahoria, arándanos, manzana es: "
+        + maximo("zanahoria", "arándano", "manzana"));
+
+  }
+
+  public static <T> List<T> fromArrayToList(T[] c) {
+    return Arrays.asList(c);
+  }
+
+  public static <T extends Number> List<T> fromArrayToList(T[] c) {
+    return Arrays.asList(c);
+  }
+
+  public static <T extends Cliente & Comparable<T>> List<T> fromArrayToList(T[] c) {
+    return Arrays.asList(c);
+  }
+
+  public static <T, G> List<T> fromArrayToList(T[] c, G[] x) {
+    for (G elemento : x) {
+      System.out.println(elemento);
+    }
+    return Arrays.asList(c);
+  }
+
+  public static void imprimirClientes(List<? extends org.miguel.poo.interfacees.modelos.Cliente> clientes) {
+    clientes.forEach(System.out::println);
+  }
+
+  public static <T extends Comparable<T>> T maximo(T a, T b, T c) {
+    T max = a;
+    if (b.compareTo(max) > 0) {
+      max = b;
+    }
+    if (c.compareTo(max) > 0) {
+      max = c;
+    }
+    return max;
   }
 }

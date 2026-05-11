@@ -5,8 +5,7 @@ import java.util.List;
 
 import org.miguel.poo.interfacees.modelos.Cliente;
 
-public class ClienteListRepositorio implements CrudRepositorio,
-    OrdenableRepositorio, PaginableRepositorio {
+public class ClienteListRepositorio implements OrdenablePaginableCrudRepositorio {
 
   private List<Cliente> dataSource;
 
@@ -79,5 +78,10 @@ public class ClienteListRepositorio implements CrudRepositorio,
         resultado = a.getApellido().compareTo(b.getApellido());
     }
     return resultado;
+  }
+
+  @Override
+  public int total() {
+    return this.dataSource.size();
   }
 }
