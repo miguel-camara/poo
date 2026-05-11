@@ -1,19 +1,15 @@
 package org.miguel.poo.interfacees.repositorios;
 
-
-
 import java.util.List;
 
-import org.miguel.poo.interfacees.modelos.Cliente;
+public interface CrudRepositorio<T> {
+  List<T> listar();
 
-public interface CrudRepositorio {
-  List<Cliente> listar();
+  T porId(Integer id);
 
-  Cliente porId(Integer id);
+  void crear(T t);
 
-  void crear(Cliente cliente);
-
-  void editar(Cliente cliente);
+  void editar(T t);
 
   void eliminar(Integer id);
 }
