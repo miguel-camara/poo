@@ -63,9 +63,13 @@ public class App {
     OrdenablePaginableCrudRepositorio<org.miguel.poo.interfacees.modelos.Cliente> repo = new ClienteListRepositorio();
 
     repo.crear(new org.miguel.poo.interfacees.modelos.Cliente("Jano", "Pérez"));
+    System.out.println("Cliente creado 1");
     repo.crear(new org.miguel.poo.interfacees.modelos.Cliente("Bea", "González"));
+    System.out.println("Cliente creado 2");
     repo.crear(new org.miguel.poo.interfacees.modelos.Cliente("Luci", "Martínez"));
+    System.out.println("Cliente creado 3");
     repo.crear(new org.miguel.poo.interfacees.modelos.Cliente("Andrés", "Guzmán"));
+    System.out.println("Cliente creado 4");
 
     List<org.miguel.poo.interfacees.modelos.Cliente> clientes = repo.listar();
     clientes.forEach(System.out::println);

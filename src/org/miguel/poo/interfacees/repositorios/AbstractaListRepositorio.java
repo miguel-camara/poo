@@ -10,7 +10,7 @@ public abstract class AbstractaListRepositorio<T extends BaseEntity> implements 
   protected List<T> dataSource;
 
   public AbstractaListRepositorio() {
-    this.dataSource = new ArrayList<>();
+    this.dataSource = new ArrayList<T>();
   }
 
   @Override
