@@ -19,11 +19,11 @@ import org.miguel.poo.sobrecarga.Calculadora;
 public class App {
   public static void main(String[] args) throws Exception {
     // factura();
-    // interfaces();
+    interfaces();
     // abstraccion();
     // sobrecarga();
     // genericos();
-    genericos2();
+    // genericos2();
 
   }
 
@@ -60,7 +60,8 @@ public class App {
 
   public static void interfaces() {
 
-    CrudRepositorio repo = new ClienteListRepositorio();
+    OrdenablePaginableCrudRepositorio<org.miguel.poo.interfacees.modelos.Cliente> repo = new ClienteListRepositorio();
+
     repo.crear(new org.miguel.poo.interfacees.modelos.Cliente("Jano", "Pérez"));
     repo.crear(new org.miguel.poo.interfacees.modelos.Cliente("Bea", "González"));
     repo.crear(new org.miguel.poo.interfacees.modelos.Cliente("Luci", "Martínez"));
@@ -69,12 +70,11 @@ public class App {
     List<org.miguel.poo.interfacees.modelos.Cliente> clientes = repo.listar();
     clientes.forEach(System.out::println);
     System.out.println("===== paginable =====");
-    List<org.miguel.poo.interfacees.modelos.Cliente> paginable = ((PaginableRepositorio) repo).listar(1, 4);
+    List<org.miguel.poo.interfacees.modelos.Cliente> paginable = repo.listar(1, 4);
     paginable.forEach(System.out::println);
 
     System.out.println("===== ordenar =====");
-    List<org.miguel.poo.interfacees.modelos.Cliente> clientesOrdenAsc = ((OrdenableRepositorio) repo)
-        .listar("apellido", Direccion.ASC);
+    List<org.miguel.poo.interfacees.modelos.Cliente> clientesOrdenAsc = repo.listar("descripcion", Direccion.ASC);
     for (org.miguel.poo.interfacees.modelos.Cliente c : clientesOrdenAsc) {
       System.out.println(c);
     }
@@ -85,11 +85,12 @@ public class App {
     beaActualizar.setId(2);
     repo.editar(beaActualizar);
     System.out.println(" ============= ");
-    ((OrdenableRepositorio) repo)
-        .listar("nombre", Direccion.ASC).forEach(System.out::println);
+    repo.listar("nombre", Direccion.ASC).forEach(System.out::println);
     System.out.println("===== eliminar ======");
-    // repo.eliminar(2);
+    repo.eliminar(2);
     repo.listar().forEach(System.out::println);
+    System.out.println("===== total ===== ");
+    System.out.println("Total registros: " + repo.total());
 
   }
 
