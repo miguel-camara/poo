@@ -2,13 +2,15 @@ package org.miguel.poo.interfacees.repositorios.lista;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.miguel.poo.excepciones.LecturaAccesoDatoException;
 import org.miguel.poo.interfacees.modelos.*;
 import org.miguel.poo.interfacees.repositorios.*;
 
 public class ClienteListRepositorio extends AbstractaListRepositorio<Cliente> {
 
   @Override
-  public void editar(Cliente cliente) {
+  public void editar(Cliente cliente) throws LecturaAccesoDatoException {
     Cliente c = this.porId(cliente.getId());
     c.setNombre(cliente.getNombre());
     c.setApellido(cliente.getApellido());

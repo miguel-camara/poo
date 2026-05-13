@@ -10,6 +10,9 @@ import org.miguel.poo.abstraccion.forms.TextareaForm;
 import org.miguel.poo.abstraccion.forms.select.Opcion;
 import org.miguel.poo.abstraccion.forms.validador.*;
 import org.miguel.poo.appfacturas.modelo.*;
+import org.miguel.poo.excepciones.AccesoDatoException;
+import org.miguel.poo.excepciones.EscrituraAccessDatoException;
+import org.miguel.poo.excepciones.LecturaAccesoDatoException;
 import org.miguel.poo.interfacees.modelos.ClientePremium;
 import org.miguel.poo.interfacees.repositorios.*;
 import org.miguel.poo.interfacees.repositorios.lista.ClienteListRepositorio;
@@ -19,11 +22,11 @@ import org.miguel.poo.sobrecarga.Calculadora;
 public class App {
   public static void main(String[] args) throws Exception {
     // factura();
-    interfaces();
+    // interfaces();
     // abstraccion();
     // sobrecarga();
     // genericos();
-    // genericos2();
+    genericos2();
 
   }
 
@@ -60,41 +63,46 @@ public class App {
 
   public static void interfaces() {
 
-    OrdenablePaginableCrudRepositorio<org.miguel.poo.interfacees.modelos.Cliente> repo = new ClienteListRepositorio();
+    try {
+      OrdenablePaginableCrudRepositorio<org.miguel.poo.interfacees.modelos.Cliente> repo = new ClienteListRepositorio();
 
-    repo.crear(new org.miguel.poo.interfacees.modelos.Cliente("Jano", "Pérez"));
-    System.out.println("Cliente creado 1");
-    repo.crear(new org.miguel.poo.interfacees.modelos.Cliente("Bea", "González"));
-    System.out.println("Cliente creado 2");
-    repo.crear(new org.miguel.poo.interfacees.modelos.Cliente("Luci", "Martínez"));
-    System.out.println("Cliente creado 3");
-    repo.crear(new org.miguel.poo.interfacees.modelos.Cliente("Andrés", "Guzmán"));
-    System.out.println("Cliente creado 4");
+      repo.crear(new org.miguel.poo.interfacees.modelos.Cliente("Jano", "Pérez"));
+      repo.crear(new org.miguel.poo.interfacees.modelos.Cliente("Bea", "González"));
+      repo.crear(new org.miguel.poo.interfacees.modelos.Cliente("Luci", "Martínez"));
+      repo.crear(new org.miguel.poo.interfacees.modelos.Cliente("Andrés", "Guzmán"));
 
-    List<org.miguel.poo.interfacees.modelos.Cliente> clientes = repo.listar();
-    clientes.forEach(System.out::println);
-    System.out.println("===== paginable =====");
-    List<org.miguel.poo.interfacees.modelos.Cliente> paginable = repo.listar(1, 4);
-    paginable.forEach(System.out::println);
+      List<org.miguel.poo.interfacees.modelos.Cliente> clientes = repo.listar();
+      clientes.forEach(System.out::println);
+      System.out.println("===== paginable =====");
+      List<org.miguel.poo.interfacees.modelos.Cliente> paginable = repo.listar(1, 4);
+      paginable.forEach(System.out::println);
 
-    System.out.println("===== ordenar =====");
-    List<org.miguel.poo.interfacees.modelos.Cliente> clientesOrdenAsc = repo.listar("descripcion", Direccion.ASC);
-    for (org.miguel.poo.interfacees.modelos.Cliente c : clientesOrdenAsc) {
-      System.out.println(c);
+      System.out.println("===== ordenar =====");
+      List<org.miguel.poo.interfacees.modelos.Cliente> clientesOrdenAsc = repo.listar("descripcion", Direccion.ASC);
+      for (org.miguel.poo.interfacees.modelos.Cliente c : clientesOrdenAsc) {
+        System.out.println(c);
+      }
+
+      System.out.println("===== editar =====");
+      org.miguel.poo.interfacees.modelos.Cliente beaActualizar = new org.miguel.poo.interfacees.modelos.Cliente("Bea",
+          "Mena");
+      beaActualizar.setId(2);
+      repo.editar(beaActualizar);
+      System.out.println(" ============= ");
+      repo.listar("nombre", Direccion.ASC).forEach(System.out::println);
+      System.out.println("===== eliminar ======");
+      repo.eliminar(2);
+      repo.listar().forEach(System.out::println);
+      System.out.println("===== total ===== ");
+      System.out.println("Total registros: " + repo.total());
+
+    } catch (LecturaAccesoDatoException e) {
+      System.out.println(e.getMessage());
+      e.printStackTrace();
+    } catch (AccesoDatoException e) {
+      System.out.println(e.getMessage());
+      e.printStackTrace();
     }
-
-    System.out.println("===== editar =====");
-    org.miguel.poo.interfacees.modelos.Cliente beaActualizar = new org.miguel.poo.interfacees.modelos.Cliente("Bea",
-        "Mena");
-    beaActualizar.setId(2);
-    repo.editar(beaActualizar);
-    System.out.println(" ============= ");
-    repo.listar("nombre", Direccion.ASC).forEach(System.out::println);
-    System.out.println("===== eliminar ======");
-    repo.eliminar(2);
-    repo.listar().forEach(System.out::println);
-    System.out.println("===== total ===== ");
-    System.out.println("Total registros: " + repo.total());
 
   }
 
@@ -246,38 +254,54 @@ public class App {
   }
 
   public static void genericos2() {
-    OrdenablePaginableCrudRepositorio<org.miguel.poo.interfacees.modelos.Producto> repo = new ProductoListRepositorio();
-    repo.crear(new org.miguel.poo.interfacees.modelos.Producto("mesa", 50.52));
-    repo.crear(new org.miguel.poo.interfacees.modelos.Producto("silla", 18));
-    repo.crear(new org.miguel.poo.interfacees.modelos.Producto("lampara", 15.5));
-    repo.crear(new org.miguel.poo.interfacees.modelos.Producto("notebook", 400.89));
 
-    List<org.miguel.poo.interfacees.modelos.Producto> productos = repo.listar();
-    productos.forEach(System.out::println);
-    System.out.println("===== paginable =====");
-    List<org.miguel.poo.interfacees.modelos.Producto> paginable = repo.listar(1, 4);
-    paginable.forEach(System.out::println);
+    try {
+      OrdenablePaginableCrudRepositorio<org.miguel.poo.interfacees.modelos.Producto> repo = new ProductoListRepositorio();
+      repo.crear(new org.miguel.poo.interfacees.modelos.Producto("mesa", 50.52));
+      repo.crear(new org.miguel.poo.interfacees.modelos.Producto("silla", 18));
+      repo.crear(new org.miguel.poo.interfacees.modelos.Producto("lampara", 15.5));
+      repo.crear(new org.miguel.poo.interfacees.modelos.Producto("notebook", 400.89));
+      repo.crear(null);
 
-    System.out.println("===== ordenar =====");
-    List<org.miguel.poo.interfacees.modelos.Producto> productosOrdenAsc = repo.listar("descripcion", Direccion.ASC);
-    for (org.miguel.poo.interfacees.modelos.Producto c : productosOrdenAsc) {
-      System.out.println(c);
+      List<org.miguel.poo.interfacees.modelos.Producto> productos = repo.listar();
+      productos.forEach(System.out::println);
+      System.out.println("===== paginable =====");
+      List<org.miguel.poo.interfacees.modelos.Producto> paginable = repo.listar(1, 4);
+      paginable.forEach(System.out::println);
+
+      System.out.println("===== ordenar =====");
+      List<org.miguel.poo.interfacees.modelos.Producto> productosOrdenAsc = repo.listar("descripcion", Direccion.ASC);
+      for (org.miguel.poo.interfacees.modelos.Producto c : productosOrdenAsc) {
+        System.out.println(c);
+      }
+
+      System.out.println("===== editar =====");
+      org.miguel.poo.interfacees.modelos.Producto lamparaActualizar = new org.miguel.poo.interfacees.modelos.Producto(
+          "lampara escritorio", 23);
+      lamparaActualizar.setId(3);
+      repo.editar(lamparaActualizar);
+      org.miguel.poo.interfacees.modelos.Producto lampara = repo.porId(3);
+      System.out.println(lampara);
+      System.out.println(" ============= ");
+      repo.listar("precio", Direccion.ASC).forEach(System.out::println);
+      System.out.println("===== eliminar ======");
+      repo.eliminar(2);
+      repo.listar().forEach(System.out::println);
+      System.out.println("===== total ===== ");
+      System.out.println("Total registros: " + repo.total());
+    } catch (LecturaAccesoDatoException e) {
+      System.err.println(e.getMessage());
+      e.printStackTrace();
+    } catch (EscrituraAccessDatoException e) {
+      System.err.println(e.getMessage());
+      e.printStackTrace();
+    } catch (AccesoDatoException e) {
+      System.err.println(e.getMessage());
+      e.printStackTrace();
+    } catch (Exception e) {
+      e.printStackTrace();
     }
 
-    System.out.println("===== editar =====");
-    org.miguel.poo.interfacees.modelos.Producto lamparaActualizar = new org.miguel.poo.interfacees.modelos.Producto(
-        "lampara escritorio", 23);
-    lamparaActualizar.setId(3);
-    repo.editar(lamparaActualizar);
-    org.miguel.poo.interfacees.modelos.Producto lampara = repo.porId(3);
-    System.out.println(lampara);
-    System.out.println(" ============= ");
-    repo.listar("precio", Direccion.ASC).forEach(System.out::println);
-    System.out.println("===== eliminar ======");
-    repo.eliminar(2);
-    repo.listar().forEach(System.out::println);
-    System.out.println("===== total ===== ");
-    System.out.println("Total registros: " + repo.total());
   }
 
 }

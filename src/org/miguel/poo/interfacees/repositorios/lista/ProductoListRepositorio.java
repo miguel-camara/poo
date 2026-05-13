@@ -3,13 +3,14 @@ package org.miguel.poo.interfacees.repositorios.lista;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.miguel.poo.excepciones.LecturaAccesoDatoException;
 import org.miguel.poo.interfacees.modelos.Producto;
 import org.miguel.poo.interfacees.repositorios.Direccion;
 
 public class ProductoListRepositorio
     extends org.miguel.poo.interfacees.repositorios.AbstractaListRepositorio<Producto> {
   @Override
-  public void editar(Producto producto) {
+  public void editar(Producto producto) throws LecturaAccesoDatoException {
     Producto p = porId(producto.getId());
     p.setDescripcion(producto.getDescripcion());
     p.setPrecio(producto.getPrecio());

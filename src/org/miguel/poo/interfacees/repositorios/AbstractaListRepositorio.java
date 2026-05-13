@@ -3,6 +3,8 @@ package org.miguel.poo.interfacees.repositorios;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.miguel.poo.excepciones.EscrituraAccessDatoException;
+import org.miguel.poo.excepciones.LecturaAccesoDatoException;
 import org.miguel.poo.interfacees.modelos.BaseEntity;
 
 public abstract class AbstractaListRepositorio<T extends BaseEntity> implements OrdenablePaginableCrudRepositorio<T> {
@@ -19,7 +21,11 @@ public abstract class AbstractaListRepositorio<T extends BaseEntity> implements 
   }
 
   @Override
-  public T porId(Integer id) {
+  public T porId(Integer id) throws LecturaAccesoDatoException {
+    if (id == null || id <= 0) {
+      throw new LecturaAccesoDatoException("El ID ingresado es invalido");
+    }
+
     T resultado = null;
     for (T cli : dataSource) {
       if (cli.getId() != null && cli.getId().equals(id)) {
@@ -27,16 +33,25 @@ public abstract class AbstractaListRepositorio<T extends BaseEntity> implements 
         break;
       }
     }
+
+    if (resultado == null) {
+      throw new LecturaAccesoDatoException(String.format("Error al editar el objeto con id = %d", id));
+    }
+
     return resultado;
   }
 
   @Override
-  public void crear(T t) {
+  public void crear(T t) throws EscrituraAccessDatoException {
+    if (t == null)
+      throw new EscrituraAccessDatoException("No su puede crear un objeto nulo");
+
     this.dataSource.add(t);
+
   }
 
   @Override
-  public void eliminar(Integer id) {
+  public void eliminar(Integer id) throws LecturaAccesoDatoException {
     this.dataSource.remove(this.porId(id));
   }
 

@@ -9,7 +9,6 @@ public class BaseEntity {
 
   public BaseEntity() {
     this.id = ++ultimoId;
-    System.out.println("ID = " + this.id);
   }
 
   public Integer getId() {
