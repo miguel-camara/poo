@@ -43,8 +43,15 @@ public abstract class AbstractaListRepositorio<T extends BaseEntity> implements 
 
   @Override
   public void crear(T t) throws EscrituraAccessDatoException {
-    if (t == null)
+    if (t == null) {
+
       throw new EscrituraAccessDatoException("No su puede crear un objeto nulo");
+    }
+
+    if (this.dataSource.contains(t)) {
+      throw new EscrituraAccessDatoException("No puede tener elementos dublicados");
+
+    }
 
     this.dataSource.add(t);
 

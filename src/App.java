@@ -260,8 +260,13 @@ public class App {
       repo.crear(new org.miguel.poo.interfacees.modelos.Producto("mesa", 50.52));
       repo.crear(new org.miguel.poo.interfacees.modelos.Producto("silla", 18));
       repo.crear(new org.miguel.poo.interfacees.modelos.Producto("lampara", 15.5));
-      repo.crear(new org.miguel.poo.interfacees.modelos.Producto("notebook", 400.89));
-      repo.crear(null);
+      // repo.crear(new org.miguel.poo.interfacees.modelos.Producto("notebook",
+      // 400.89));
+      org.miguel.poo.interfacees.modelos.Producto pr = new org.miguel.poo.interfacees.modelos.Producto("notebook",
+          400.89);
+      repo.crear(pr);
+      // repo.crear(pr);
+      // repo.crear(null);
 
       List<org.miguel.poo.interfacees.modelos.Producto> productos = repo.listar();
       productos.forEach(System.out::println);
